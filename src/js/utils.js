@@ -30,8 +30,8 @@ module.exports.csvToJson = function csvToJson(csvString) {
 
         for (let j = 0; j < headers.length; j++) {
             const key = headers[j].trim(); // Trim whitespace from header keys
-            const value = values[j].trim(); // Trim whitespace from values
-            obj[key] = value;
+             // Trim whitespace from values
+            obj[key] = values[j].trim();
         }
         jsonData.push(obj);
     }
