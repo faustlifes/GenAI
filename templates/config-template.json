@@ -9,6 +9,7 @@
       "fieldFrom": "",
       "fieldTo": "",
       "matcher": "",
+      "separator": ",",
       "basicAuth":{
         "login": "",
         "pass": ""

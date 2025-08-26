@@ -4,11 +4,12 @@ const https = require('https');
  * convert json array csv string, with option adding head
  * @param {Array} jsonArray
  * @param {boolean} header
+ * @param {string} separator
  * @returns string
  */
-module.exports.jsonToCsv = function jsonToCsv(jsonArray, header = true) {
+module.exports.jsonToCsv = function jsonToCsv(jsonArray, header = true, separator = ',') {
     const headers = Object.keys(jsonArray[0]);
-    const csvHeader = headers.join(',');
+    const csvHeader = headers.join(separator);
 
     const csvRows = jsonArray.map(obj =>
         headers.map(header => {
@@ -16,10 +17,10 @@ module.exports.jsonToCsv = function jsonToCsv(jsonArray, header = true) {
             if (typeof value === 'object') {
                 value = JSON.stringify(value);
             }
-            return typeof value === 'string' && (value.includes(',') || value.includes('"'))
+            return typeof value === 'string' && (value.includes(separator) || value.includes('"'))
                 ? `"${value.replace(/"/g, '""')}"`
                 : value;
-        }).join(',')
+        }).join(separator)
     );
 
     return header? [csvHeader, ...csvRows].join('\n'): [...csvRows].join('\n');
@@ -28,15 +29,16 @@ module.exports.jsonToCsv = function jsonToCsv(jsonArray, header = true) {
 /**
  * convert csf string to json array
  * @param {string} csvString
+ * @param {string} separator
  * @returns string
  */
-module.exports.csvToJson = function csvToJson(csvString) {
+module.exports.csvToJson = function csvToJson(csvString, separator = ',') {
     const rows = csvString.trim().split('\n'); // Split into lines and remove trailing whitespace
-    const headers = rows[0].split(','); // Extract headers from the first line
+    const headers = rows[0].split(separator); // Extract headers from the first line
     const jsonData = [];
 
     for (let i = 1; i < rows.length; i++) {
-        const values = rows[i].split(',');
+        const values = rows[i].split(separator);
         const obj = {};
 
         for (let j = 0; j < headers.length; j++) {

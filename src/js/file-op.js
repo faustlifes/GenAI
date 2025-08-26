@@ -4,10 +4,11 @@ const fs = require("fs");
 /**
  * convert file from csv to json and write to file by path automatically add extensions
  * @param {string} filePath
+ * @param {string} separator
  * @returns void
  */
-function convert (filePath) {
-        const data = utils.csvToJson(getFile(`${filePath}.csv`));
+function convert (filePath, separator = ',') {
+        const data = utils.csvToJson(getFile(`${filePath}.csv`), separator);
         writeFile(`${filePath}.json`, data);
 }
 
@@ -46,13 +47,13 @@ function writeFile (filePath = '', data) {
  * @param {object} options
  * @returns Promise<void>
  */
-async function addFieldByURL(path, options = { fieldFrom: '', fieldTo: '', basicAuth: { login: '', pass: ''}, matcher: / /g }) {
+async function addFieldByURL(path, options = { fieldFrom: '', fieldTo: '', basicAuth: { login: '', pass: ''}, matcher: / /g, separator: ',' }) {
     if (!path) {
         return;
     }
 
     const data = getFile(`${path}.csv`);
-    const jsonArray = JSON.parse(utils.csvToJson(data));
+    const jsonArray = JSON.parse(utils.csvToJson(data, options.separator));
     let result = '';
     for (let i = 0; i < jsonArray.length; i++) {
         const el = jsonArray[i];
@@ -60,7 +61,7 @@ async function addFieldByURL(path, options = { fieldFrom: '', fieldTo: '', basic
         el[options.fieldTo] = payload? JSON.parse(payload) : null;
         el.addFieldsUSed =  payload ? !!payload.match(options.matcher) : false;
         result += `
-        ${utils.jsonToCsv([el], false)}`;
+        ${utils.jsonToCsv([el], false, options.separator)}`;
     }
 
     writeFile(`${path}_UPD.csv`, result);
