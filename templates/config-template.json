@@ -1,0 +1,22 @@
+{
+  "openAIAzure": {
+    "AZURE_OPENAI_API_KEY": "",
+    "AZURE_OPENAI_ENDPOINT": "",
+    "OPENAI_API_VERSION": ""
+  },
+  "addField": {
+    "options": {
+      "fieldFrom": "",
+      "fieldTo": "",
+      "matcher": "",
+      "basicAuth":{
+        "login": "",
+        "pass": ""
+      }
+    },
+    "path": {
+      "json": "",
+      "csv": ""
+    }
+  }
+}

@@ -1,6 +1,12 @@
 const https = require('https');
 
-module.exports.jsonToCsv = function jsonToCsv(jsonArray) {
+/**
+ * convert json array csv string, with option adding head
+ * @param {Array} jsonArray
+ * @param {boolean} header
+ * @returns string
+ */
+module.exports.jsonToCsv = function jsonToCsv(jsonArray, header = true) {
     const headers = Object.keys(jsonArray[0]);
     const csvHeader = headers.join(',');
 
@@ -16,11 +22,14 @@ module.exports.jsonToCsv = function jsonToCsv(jsonArray) {
         }).join(',')
     );
 
-    return [csvHeader, ...csvRows].join('\n');
+    return header? [csvHeader, ...csvRows].join('\n'): [...csvRows].join('\n');
 }
 
-//console.log (jsonToCsv(jsonArray));
-
+/**
+ * convert csf string to json array
+ * @param {string} csvString
+ * @returns string
+ */
 module.exports.csvToJson = function csvToJson(csvString) {
     const rows = csvString.trim().split('\n'); // Split into lines and remove trailing whitespace
     const headers = rows[0].split(','); // Extract headers from the first line
@@ -31,15 +40,21 @@ module.exports.csvToJson = function csvToJson(csvString) {
         const obj = {};
 
         for (let j = 0; j < headers.length; j++) {
-            const key = headers[j].trim(); // Trim whitespace from header keys
+            const key = headers[j].trim().replace(/"/g, ''); // Trim whitespace from header keys
             // Trim whitespace from values
-            obj[key] = values[j].trim();
+            obj[key] = values[j].trim().replace(/"/g, '');
         }
         jsonData.push(obj);
     }
     return JSON.stringify(jsonData); // Convert the array of objects to a JSON string
 }
 
+/**
+ * split csv string by limit
+ * @param {string} input
+ * @param {number} limit
+ * @returns Array<Array>
+ */
 module.exports.limiter = function limiter(input, limit = 4) {
     let [i, j, index] = [0, 0, 0];
     const data = input.split('\n');
@@ -58,7 +73,16 @@ module.exports.limiter = function limiter(input, limit = 4) {
     return res;
 }
 
+/**
+ * getData http fetch data by url with basic auth
+ * @param {object} auth
+ * @param {string} url
+ * @returns Promise
+ */
 module.exports.getData = function (auth = {login: "", pass: ""}, url = '') {
+    if (!url) {
+        return new Promise((resolve) => {resolve(null)});
+    }
     const credentials = Buffer.from(`${auth.login}:${auth.pass}`).toString('base64');
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
@@ -87,13 +111,10 @@ module.exports.getData = function (auth = {login: "", pass: ""}, url = '') {
         });
 
         req.on('error', (e) => {
-            console.error(`Problem with request: ${e.message}`);
+            console.error(`Problem with request: `, url);
+            console.error(`Problem with request: `, e);
             reject(e);
         });
-
-        // For POST or PUT requests, write data to the request body
-        // req.write(JSON.stringify({ key: 'value' }));
-
         req.end();
     });
 
