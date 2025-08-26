@@ -28,6 +28,4 @@ function checkAddField(str) {
 }
 
 console.log('time start: ', new Date().toString());
-addField(config.path.csv).then(r => console.log('time stop: ', new Date().toString()));
-//utils.getData(config.basicAuth, 'https://pro-vsqt-01-log.visiquate.com/payload/processed/2025-07-09/bc38f0f1-091f-4ad0-ab55-1ae820ae37e9.json');
-//fileOp.convert("res/byram/test_data_sample");
+addField(config.path.csv).then(() => console.log('time stop: ', new Date().toString()));
