@@ -22,5 +22,27 @@
   },
   "BOMConverter": {
     "path": ""
-  }
+  },
+  "convert": {
+    "path": "",
+    "separator": ","
+  },
+  "csvToJson": {
+    "path": "",
+    "separator": ","
+  },
+  "jsonToCsv": {
+    "path": "",
+    "separator": ","
+  },
+  "getFile": {
+    "path": "",
+    "encoding": "utf8"
+  },
+  "writeFile": {
+    "path": "",
+    "data": "",
+    "encoding": "utf8"
+  },
+  "run": ["addField", "BOMConverter", "convert", "csvToJson", "jsonToCsv", "getFile", "writeFile"]
 }
