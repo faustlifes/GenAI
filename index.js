@@ -13,7 +13,7 @@ const runners = {
     BOMConverter: () => BOMParser.licensesList(fileOp.getFile(`${config.BOMConverter.path}.json`)),
     convert: () => fileOp.convert(config.convert.path, config.convert.separator),
     csvToJson: () => {
-        const csv = fileOp.getFile(config.csvToJson.path, config.csvToJson.separator);
+        const csv = fileOp.getFile(config.csvToJson.path);
         const json = utils.csvToJson(csv, config.csvToJson.separator);
         fileOp.writeFile(config.csvToJson.path.replace('.csv', '.json'), JSON.stringify(json));
     },
@@ -32,7 +32,7 @@ const runners = {
         console.log('writeFile done');
     }
 };
-
+x
 (async () => {
     for (const method of config.run) {
         if (runners[method]) {
